@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: healhaven
+
+  # Database Configuration (Supabase PostgreSQL)
+  datasource:
+    # Using Supavisor Connection Pooling (Transaction Mode port 6543)
+    url: jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require
+    username: postgres.rtahmkkunlwacxdyrnrx
+    password: geXHyn6YfpOadJPe
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/api/auth/oauth2/callback/{registrationId}"
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:healhaven-secret-key-for-jwt-token-generation-minimum-256-bits}
+  expiration: 86400000 # 24 hours in milliseconds
+  refresh-expiration: 604800000 # 7 days in milliseconds
+
+# Server Configuration
+server:
+  port: 8080
+  servlet:
+     context-path: /api
+
+# Logging
+logging:
+  level:
+    backend.healhaven: DEBUG
+    org.springframework.security: DEBUG
