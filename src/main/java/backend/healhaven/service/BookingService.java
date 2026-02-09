@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -208,5 +209,46 @@ public class BookingService {
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userDetailsService.getUserByEmail(email);
+    }
+
+    public List<BookingResponse> getWorkshopBookings(Integer workshopId, Integer hostId) {
+        Workshop workshop = workshopRepository.findById(workshopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workshop", "id", workshopId));
+
+        // Verify host ownership
+        if (!workshop.getHost().getUserId().equals(hostId)) {
+            throw new backend.healhaven.exception.BadRequestException("You are not the host of this workshop");
+        }
+
+        return bookingRepository.findByWorkshopWorkshopId(workshopId).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public BookingResponse checkInAttendee(String checkinCode, Integer hostId) {
+        UUID code;
+        try {
+            code = UUID.fromString(checkinCode);
+        } catch (IllegalArgumentException e) {
+            throw new backend.healhaven.exception.BadRequestException("Invalid check-in code format");
+        }
+
+        Booking booking = bookingRepository.findByCheckinCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking", "checkinCode", checkinCode));
+
+        // Verify host ownership
+        if (!booking.getWorkshop().getHost().getUserId().equals(hostId)) {
+            throw new backend.healhaven.exception.BadRequestException("You are not the host of this workshop");
+        }
+
+        if (booking.getBookingStatus() == BookingStatus.ATTENDED) {
+            throw new backend.healhaven.exception.BadRequestException("Attendee already checked in");
+        }
+
+        booking.setBookingStatus(BookingStatus.ATTENDED);
+        booking.setCheckinAt(java.time.LocalDateTime.now());
+
+        return mapToResponse(bookingRepository.save(booking));
     }
 }
