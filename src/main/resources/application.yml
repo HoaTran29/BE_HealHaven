@@ -25,12 +25,12 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
+            client-id: 1089431720402-svcom6u19il9djr08s81qj1i66oj01et.apps.googleusercontent.com
+            client-secret: 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
             scope:
               - email
               - profile
-            redirect-uri: "{baseUrl}/api/auth/oauth2/callback/{registrationId}"
+            redirect-uri: "http://localhost:8080/api/login/oauth2/code/{registrationId}"
 
 # JWT Configuration
 jwt:

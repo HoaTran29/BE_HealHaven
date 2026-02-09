@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "HealHaven API", version = "1.0", description = "Backend API for HealHaven - Wellness Workshop Booking Platform", contact = @Contact(name = "HealHaven Team", email = "support@healhaven.com")), servers = {
-        @Server(url = "/api", description = "Local Server")
+        @Server(url = "http://localhost:8080/api", description = "Local Server")
+}, security = {
+        @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth")
 })
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class OpenApiConfig {
