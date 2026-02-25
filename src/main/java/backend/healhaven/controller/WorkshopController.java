@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -70,6 +71,7 @@ public class WorkshopController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('HOST')")
     @Operation(summary = "Create workshop", description = "Create a new workshop (HOST only)")
     public ResponseEntity<ApiResponse<WorkshopResponse>> createWorkshop(
             @RequestBody @jakarta.validation.Valid backend.healhaven.dto.request.WorkshopRequest request,
@@ -81,6 +83,7 @@ public class WorkshopController {
     }
 
     @PutMapping("/{workshopId}")
+    @PreAuthorize("hasRole('HOST')")
     @Operation(summary = "Update workshop", description = "Update an existing workshop (Owner only)")
     public ResponseEntity<ApiResponse<WorkshopResponse>> updateWorkshop(
             @PathVariable Integer workshopId,
@@ -92,6 +95,7 @@ public class WorkshopController {
     }
 
     @DeleteMapping("/{workshopId}")
+    @PreAuthorize("hasRole('HOST')")
     @Operation(summary = "Delete workshop", description = "Delete a workshop (Owner only, no confirmed bookings)")
     public ResponseEntity<ApiResponse<Void>> deleteWorkshop(
             @PathVariable Integer workshopId,
@@ -101,18 +105,20 @@ public class WorkshopController {
         return ResponseEntity.ok(ApiResponse.success("Workshop deleted successfully", null));
     }
 
-    @PostMapping("/{workshopId}/publish")
-    @Operation(summary = "Publish workshop", description = "Publish a draft workshop (Owner only)")
-    public ResponseEntity<ApiResponse<WorkshopResponse>> publishWorkshop(
+    @PostMapping("/{workshopId}/submit")
+    @PreAuthorize("hasRole('HOST')")
+    @Operation(summary = "Submit workshop for review", description = "Submit a draft workshop for admin approval (DRAFT → PENDING_APPROVAL)")
+    public ResponseEntity<ApiResponse<WorkshopResponse>> submitWorkshop(
             @PathVariable Integer workshopId,
             @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
         Integer hostId = getUserIdFromUserDetails(userDetails);
-        WorkshopResponse response = workshopService.publishWorkshop(workshopId, hostId);
-        return ResponseEntity.ok(ApiResponse.success("Workshop published successfully", response));
+        WorkshopResponse response = workshopService.submitWorkshop(workshopId, hostId);
+        return ResponseEntity.ok(ApiResponse.success("Workshop submitted for review", response));
     }
 
     @GetMapping("/my-workshops")
-    @Operation(summary = "Get my workshops", description = "Get all workshops created by the current user")
+    @PreAuthorize("hasRole('HOST')")
+    @Operation(summary = "Get my workshops", description = "Get all workshops created by the current host")
     public ResponseEntity<ApiResponse<List<WorkshopResponse>>> getMyWorkshops(
             @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
         Integer hostId = getUserIdFromUserDetails(userDetails);

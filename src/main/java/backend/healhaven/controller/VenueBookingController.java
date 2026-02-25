@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,8 @@ public class VenueBookingController {
     private final UserRepository userRepository;
 
     @PostMapping
-    @Operation(summary = "Book a venue", description = "Create a request to book a venue")
+    @PreAuthorize("hasRole('HOST')")
+    @Operation(summary = "Book a venue", description = "Create a request to book a venue (HOST only)")
     public ResponseEntity<ApiResponse<VenueBookingResponse>> createBooking(
             @Valid @RequestBody VenueBookingRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -39,7 +41,8 @@ public class VenueBookingController {
     }
 
     @GetMapping("/my-bookings")
-    @Operation(summary = "Get my venue bookings", description = "Get list of venue bookings made by current user")
+    @PreAuthorize("hasRole('HOST')")
+    @Operation(summary = "Get my venue bookings", description = "Get list of venue bookings made by current host (HOST only)")
     public ResponseEntity<ApiResponse<List<VenueBookingResponse>>> getMyBookings(
             @AuthenticationPrincipal UserDetails userDetails) {
         Integer hostId = getUserIdFromUserDetails(userDetails);

@@ -170,17 +170,24 @@ public class WorkshopService {
         }
 
         @Transactional
-        public WorkshopResponse publishWorkshop(Integer workshopId, Integer hostId) {
+        public WorkshopResponse submitWorkshop(Integer workshopId, Integer hostId) {
                 Workshop workshop = workshopRepository.findById(workshopId)
                                 .orElseThrow(() -> new ResourceNotFoundException("Workshop", "id", workshopId));
 
                 // Verify ownership
                 if (!workshop.getHost().getUserId().equals(hostId)) {
                         throw new backend.healhaven.exception.BadRequestException(
-                                        "You are not authorized to publish this workshop");
+                                        "You are not authorized to submit this workshop");
                 }
 
-                workshop.setStatus(WorkshopStatus.PUBLISHED);
+                // Only DRAFT workshops can be submitted for review
+                if (workshop.getStatus() != WorkshopStatus.DRAFT) {
+                        throw new backend.healhaven.exception.BadRequestException(
+                                        "Only DRAFT workshops can be submitted for review. Current status: "
+                                                        + workshop.getStatus());
+                }
+
+                workshop.setStatus(WorkshopStatus.PENDING_APPROVAL);
                 workshop = workshopRepository.save(workshop);
                 return mapToResponse(workshop);
         }

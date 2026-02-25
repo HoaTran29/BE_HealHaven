@@ -1,9 +1,7 @@
 package backend.healhaven.service;
 
 import backend.healhaven.dto.response.FinancialStatsResponse;
-import backend.healhaven.entity.User;
 import backend.healhaven.repository.BookingRepository;
-import backend.healhaven.repository.UserRepository;
 import backend.healhaven.repository.VenueBookingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,6 @@ public class FinancialService {
 
     private final BookingRepository bookingRepository;
     private final VenueBookingRepository venueBookingRepository;
-    private final UserRepository userRepository;
 
     public FinancialStatsResponse getHostFinancialStats(Integer hostId) {
         BigDecimal totalRevenue = bookingRepository.calculateTotalRevenue(hostId);
