@@ -5,7 +5,6 @@ import backend.healhaven.dto.response.PageResponse;
 import backend.healhaven.dto.response.RefundResponse;
 import backend.healhaven.entity.Booking;
 import backend.healhaven.entity.User;
-import backend.healhaven.enums.BookingStatus;
 import backend.healhaven.enums.PaymentStatus;
 import backend.healhaven.enums.RefundStatus;
 import backend.healhaven.exception.BadRequestException;

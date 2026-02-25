@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,6 +63,7 @@ public class BookingController {
     }
 
     @GetMapping("/workshop/{workshopId}")
+    @PreAuthorize("hasRole('HOST')")
     @Operation(summary = "Get workshop attendees", description = "Get list of bookings for a specific workshop (HOST only)")
     public ResponseEntity<ApiResponse<List<BookingResponse>>> getWorkshopBookings(
             @PathVariable Integer workshopId,
@@ -72,6 +74,7 @@ public class BookingController {
     }
 
     @PostMapping("/check-in")
+    @PreAuthorize("hasRole('HOST')")
     @Operation(summary = "Check-in attendee", description = "Check-in an attendee using their code (HOST only)")
     public ResponseEntity<ApiResponse<BookingResponse>> checkInAttendee(
             @RequestBody java.util.Map<String, String> request,
