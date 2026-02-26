@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class VenueRequest {
@@ -30,4 +31,6 @@ public class VenueRequest {
     private String amenities;
 
     private String description;
+
+    private List<String> imageUrls;
 }
