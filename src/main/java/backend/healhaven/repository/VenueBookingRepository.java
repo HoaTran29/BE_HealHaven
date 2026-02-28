@@ -27,6 +27,11 @@ public interface VenueBookingRepository extends JpaRepository<VenueBooking, Inte
         @Query("SELECT vb FROM VenueBooking vb WHERE vb.venue.provider.userId = :providerId ORDER BY vb.bookingDate DESC")
         List<VenueBooking> findByVenueProviderUserId(@Param("providerId") Integer providerId);
 
+        // Lấy booking của provider theo status
+        @Query("SELECT vb FROM VenueBooking vb WHERE vb.venue.provider.userId = :providerId AND vb.status = :status ORDER BY vb.bookingDate DESC")
+        List<VenueBooking> findByVenueProviderUserIdAndStatus(@Param("providerId") Integer providerId,
+                        @Param("status") VenueBookingStatus status);
+
         // Kiểm tra trùng lịch: có booking nào đã CONFIRMED trùng ngày + giờ không
         @Query("SELECT vb FROM VenueBooking vb WHERE vb.venue.venueId = :venueId " +
                         "AND vb.bookingDate = :bookingDate " +

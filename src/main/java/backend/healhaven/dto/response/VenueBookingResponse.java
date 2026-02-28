@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
@@ -17,9 +18,13 @@ public class VenueBookingResponse {
     private String venueAddress;
     private Integer hostId;
     private String hostName;
+    private String hostEmail;
+    private String hostPhone;
     private LocalDate bookingDate;
     private LocalTime startTime;
     private LocalTime endTime;
     private BigDecimal totalCost;
     private VenueBookingStatus status;
+    private String rejectionReason;
+    private LocalDateTime updatedAt;
 }
