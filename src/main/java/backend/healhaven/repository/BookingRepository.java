@@ -55,4 +55,15 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
         // Find all bookings for a workshop
         List<Booking> findByWorkshopWorkshopId(Integer workshopId);
+
+        // System Net Revenue
+        @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b WHERE b.paymentStatus = 'PAID'")
+        java.math.BigDecimal calculateSystemNetRevenue();
+
+        // Get paid bookings in a specific year for charting
+        @Query(value = "SELECT * FROM bookings WHERE payment_status = 'PAID' AND EXTRACT(YEAR FROM created_at) = :year", nativeQuery = true)
+        List<Booking> findPaidBookingsByYear(@Param("year") int year);
+
+        // Find bookings awaiting admin payment confirmation
+        Page<Booking> findByPaymentStatus(backend.healhaven.enums.PaymentStatus status, Pageable pageable);
 }

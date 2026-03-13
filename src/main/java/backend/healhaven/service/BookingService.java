@@ -178,6 +178,16 @@ public class BookingService {
             refundStatus = booking.getRefundRequest().getStatus().name();
         }
 
+        String finalVenueName = workshop.getVenue() != null ? workshop.getVenue().getName() : null;
+        if (workshop.getDistrict() != null && !workshop.getDistrict().isBlank()) {
+            finalVenueName = workshop.getDistrict();
+        }
+
+        String finalVenueAddress = workshop.getVenue() != null ? workshop.getVenue().getAddress() : null;
+        if (workshop.getAddress() != null && !workshop.getAddress().isBlank()) {
+            finalVenueAddress = workshop.getAddress();
+        }
+
         BookingResponse.WorkshopSummary workshopSummary = BookingResponse.WorkshopSummary.builder()
                 .workshopId(workshop.getWorkshopId())
                 .title(workshop.getTitle())
@@ -185,17 +195,21 @@ public class BookingService {
                 .primaryImage(primaryImage)
                 .startTime(workshop.getStartTime())
                 .endTime(workshop.getEndTime())
-                .venueName(workshop.getVenue() != null ? workshop.getVenue().getName() : null)
-                .venueAddress(workshop.getVenue() != null ? workshop.getVenue().getAddress() : null)
+                .venueName(finalVenueName)
+                .venueAddress(finalVenueAddress)
                 .hostName(workshop.getHost() != null ? workshop.getHost().getFullName() : null)
                 .build();
 
         return BookingResponse.builder()
                 .bookingId(booking.getBookingId())
+                .id(booking.getBookingId())
                 .quantity(booking.getQuantity())
                 .totalPrice(booking.getTotalPrice())
+                .amount(booking.getTotalPrice())
                 .paymentStatus(booking.getPaymentStatus())
                 .bookingStatus(booking.getBookingStatus())
+                .userId(booking.getAttendee() != null ? booking.getAttendee().getUserId() : null)
+                .userName(booking.getAttendee() != null ? booking.getAttendee().getFullName() : null)
                 .checkinCode(booking.getCheckinCode())
                 .checkinAt(booking.getCheckinAt())
                 .createdAt(booking.getCreatedAt())

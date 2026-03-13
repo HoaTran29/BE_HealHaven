@@ -15,6 +15,7 @@ import java.util.List;
 public class WorkshopResponse {
 
     private Integer workshopId;
+    private Integer id; // Alias for workshopId
     private String title;
     private String category;
     private String description;
@@ -22,10 +23,17 @@ public class WorkshopResponse {
     private Integer minAttendees;
     private Integer maxAttendees;
     private Integer availableSeats;
+    private Integer capacity; // Same as maxAttendees
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String startDate; // Formatted date
+    private String endDate;   // Formatted date
     private String status;
     private Boolean isFeatured;
+    private String materials;
+    private String itinerary;
+    private String address;
+    private String district;
     private LocalDateTime createdAt;
 
     // Host info

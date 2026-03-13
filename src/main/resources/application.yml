@@ -5,7 +5,7 @@ spring:
   # Database Configuration (Supabase PostgreSQL)
   datasource:
     # Using Supavisor Connection Pooling (Transaction Mode port 6543)
-    url: jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require
+    url: jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&prepareThreshold=0
     username: postgres.rtahmkkunlwacxdyrnrx
     password: geXHyn6YfpOadJPe
     driver-class-name: org.postgresql.Driver
@@ -49,3 +49,17 @@ logging:
   level:
     backend.healhaven: DEBUG
     org.springframework.security: DEBUG
+
+# VNPay Configuration (Sandbox)
+vnpay:
+  tmn-code: "V0HLB31O"
+  hash-secret: "72UB14VN1ILYFFVXS90NPRQMOVCKK4CZ"
+  url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  # IPN URL: VNPay gọi server-to-server để xác nhận giao dịch
+  # Khi deploy production thay localhost bằng domain thật.
+  # Khi develop local, dùng ngrok: ngrok http 8080 → lấy https URL thay vào đây
+  ipn-url: "http://localhost:8080/api/payments/vnpay-ipn"
+  # Return URL: trình duyệt redirect về sau khi thanh toán
+  return-url: "http://localhost:5173/payment/result"
+  version: "2.1.0"
+  command: "pay"

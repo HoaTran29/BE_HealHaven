@@ -45,6 +45,9 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "is_banned")
+    private Boolean isBanned;
+
     // Relationships
     @OneToMany(mappedBy = "attendee", fetch = FetchType.LAZY)
     private List<Booking> bookings;
