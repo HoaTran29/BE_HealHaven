@@ -5,9 +5,9 @@ spring:
   # Database Configuration (Supabase PostgreSQL)
   datasource:
     # Using Supavisor Connection Pooling (Transaction Mode port 6543)
-    url: jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&prepareThreshold=0
-    username: postgres.rtahmkkunlwacxdyrnrx
-    password: geXHyn6YfpOadJPe
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&prepareThreshold=0}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres.rtahmkkunlwacxdyrnrx}
+    password: ${SPRING_DATASOURCE_PASSWORD:geXHyn6YfpOadJPe}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -25,12 +25,12 @@ spring:
       client:
         registration:
           google:
-            client-id: 1089431720402-svcom6u19il9djr08s81qj1i66oj01et.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${GOOGLE_CLIENT_ID:1089431720402-svcom6u19il9djr08s81qj1i66oj01et.apps.googleusercontent.com}
+            client-secret: ${GOOGLE_CLIENT_SECRET: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}
             scope:
               - email
               - profile
-            redirect-uri: "http://localhost:8080/api/login/oauth2/code/{registrationId}"
+            redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:8080/api/login/oauth2/code/google}"
 
 # JWT Configuration
 jwt:
@@ -40,7 +40,7 @@ jwt:
 
 # Server Configuration
 server:
-  port: 8080
+  port: ${PORT:8080}
   servlet:
      context-path: /api
 
@@ -52,14 +52,12 @@ logging:
 
 # VNPay Configuration (Sandbox)
 vnpay:
-  tmn-code: "V0HLB31O"
-  hash-secret: "72UB14VN1ILYFFVXS90NPRQMOVCKK4CZ"
+  tmn-code: ${VNPAY_TMN_CODE:V0HLB31O}
+  hash-secret: ${VNPAY_HASH_SECRET:72UB14VN1ILYFFVXS90NPRQMOVCKK4CZ}
   url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
   # IPN URL: VNPay gọi server-to-server để xác nhận giao dịch
-  # Khi deploy production thay localhost bằng domain thật.
-  # Khi develop local, dùng ngrok: ngrok http 8080 → lấy https URL thay vào đây
-  ipn-url: "http://localhost:8080/api/payments/vnpay-ipn"
+  ipn-url: ${VNPAY_IPN_URL:http://localhost:8080/api/payments/vnpay-ipn}
   # Return URL: trình duyệt redirect về sau khi thanh toán
-  return-url: "http://localhost:5173/payment/result"
+  return-url: ${VNPAY_RETURN_URL:http://localhost:5173/payment/result}
   version: "2.1.0"
   command: "pay"
