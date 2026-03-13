@@ -17,10 +17,14 @@ import java.util.UUID;
 public class BookingResponse {
 
     private Integer bookingId;
+    private Integer id; // Alias for bookingId
     private Integer quantity;
     private BigDecimal totalPrice;
+    private BigDecimal amount; // Alias for totalPrice
     private PaymentStatus paymentStatus;
     private BookingStatus bookingStatus;
+    private Integer userId;
+    private String userName;
     private UUID checkinCode;
     private LocalDateTime checkinAt;
     private LocalDateTime createdAt;

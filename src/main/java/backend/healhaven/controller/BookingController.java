@@ -38,7 +38,7 @@ public class BookingController {
                 .body(ApiResponse.success("Booking created successfully", response));
     }
 
-    @GetMapping
+    @GetMapping("/my")
     @Operation(summary = "Get my bookings", description = "Get list of user's bookings")
     public ResponseEntity<ApiResponse<PageResponse<BookingResponse>>> getMyBookings(
             @RequestParam(defaultValue = "0") Integer page,

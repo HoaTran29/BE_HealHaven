@@ -37,4 +37,12 @@ public class WorkshopRequest {
     private Integer venueId;
 
     private Boolean isFeatured;
+
+    private String materials;
+
+    private String itinerary;
+
+    private String address;
+
+    private String district;
 }

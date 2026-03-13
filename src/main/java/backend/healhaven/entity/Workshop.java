@@ -63,6 +63,18 @@ public class Workshop {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(columnDefinition = "TEXT")
+    private String materials;
+
+    @Column(columnDefinition = "TEXT")
+    private String itinerary;
+
+    @Column
+    private String address;
+
+    @Column
+    private String district;
+
     // Relationships
     @OneToMany(mappedBy = "workshop", fetch = FetchType.LAZY)
     private List<Booking> bookings;

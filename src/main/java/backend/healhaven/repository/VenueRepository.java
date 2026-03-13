@@ -9,4 +9,7 @@ import java.util.List;
 @Repository
 public interface VenueRepository extends JpaRepository<Venue, Integer> {
     List<Venue> findByProviderUserId(Integer providerId);
+
+    org.springframework.data.domain.Page<Venue> findByStatus(String status,
+            org.springframework.data.domain.Pageable pageable);
 }

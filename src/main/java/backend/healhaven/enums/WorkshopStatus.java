@@ -9,5 +9,6 @@ public enum WorkshopStatus {
     PENDING_APPROVAL, // Chờ duyệt
     PUBLISHED, // Đang hiển thị
     HAPPENING, // Đang diễn ra
-    CLOSED // Đã đóng
+    CLOSED, // Đã đóng
+    REJECTED // Đã bị từ chối duyệt
 }

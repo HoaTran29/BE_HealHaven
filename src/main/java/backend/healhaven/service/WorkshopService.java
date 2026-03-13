@@ -38,14 +38,24 @@ public class WorkshopService {
         private final VenueRepository venueRepository;
 
         public PageResponse<WorkshopResponse> searchWorkshops(WorkshopSearchRequest request) {
+                // Native query uses SQL column names, not Java field names. Map accordingly.
+                String sortByColumn = switch (request.getSortBy()) {
+                        case "startTime" -> "start_time";
+                        case "endTime" -> "end_time";
+                        case "createdAt" -> "created_at";
+                        case "maxAttendees" -> "max_attendees";
+                        case "minAttendees" -> "min_attendees";
+                        default -> request.getSortBy(); // "price", "title" etc. are same in SQL
+                };
+
                 Sort sort = request.getSortDir().equalsIgnoreCase("desc")
-                                ? Sort.by(request.getSortBy()).descending()
-                                : Sort.by(request.getSortBy()).ascending();
+                                ? Sort.by(sortByColumn).descending()
+                                : Sort.by(sortByColumn).ascending();
 
                 Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
 
                 Page<Workshop> workshopPage = workshopRepository.searchWorkshops(
-                                WorkshopStatus.PUBLISHED,
+                                WorkshopStatus.PUBLISHED.name(),
                                 request.getCategory(),
                                 request.getDistrict(),
                                 request.getMinPrice(),
@@ -97,6 +107,10 @@ public class WorkshopService {
                                 .maxAttendees(request.getMaxAttendees())
                                 .startTime(request.getStartTime())
                                 .endTime(request.getEndTime())
+                                .materials(request.getMaterials())
+                                .itinerary(request.getItinerary())
+                                .address(request.getAddress())
+                                .district(request.getDistrict())
                                 .isFeatured(request.getIsFeatured() != null ? request.getIsFeatured() : false)
                                 .status(WorkshopStatus.DRAFT)
                                 .build();
@@ -133,6 +147,10 @@ public class WorkshopService {
                 workshop.setMaxAttendees(request.getMaxAttendees());
                 workshop.setStartTime(request.getStartTime());
                 workshop.setEndTime(request.getEndTime());
+                workshop.setMaterials(request.getMaterials());
+                workshop.setItinerary(request.getItinerary());
+                workshop.setAddress(request.getAddress());
+                workshop.setDistrict(request.getDistrict());
                 if (request.getIsFeatured() != null) {
                         workshop.setIsFeatured(request.getIsFeatured());
                 }
@@ -237,8 +255,11 @@ public class WorkshopService {
                                         .build();
                 }
 
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
                 return WorkshopResponse.builder()
                                 .workshopId(workshop.getWorkshopId())
+                                .id(workshop.getWorkshopId())
                                 .title(workshop.getTitle())
                                 .category(workshop.getCategory())
                                 .description(workshop.getDescription())
@@ -246,10 +267,17 @@ public class WorkshopService {
                                 .minAttendees(workshop.getMinAttendees())
                                 .maxAttendees(workshop.getMaxAttendees())
                                 .availableSeats(availableSeats)
+                                .capacity(workshop.getMaxAttendees())
                                 .startTime(workshop.getStartTime())
                                 .endTime(workshop.getEndTime())
+                                .startDate(workshop.getStartTime().format(formatter))
+                                .endDate(workshop.getEndTime().format(formatter))
                                 .status(workshop.getStatus().name())
                                 .isFeatured(workshop.getIsFeatured())
+                                .materials(workshop.getMaterials())
+                                .itinerary(workshop.getItinerary())
+                                .address(workshop.getAddress() != null ? workshop.getAddress() : (workshop.getVenue() != null ? workshop.getVenue().getAddress() : null))
+                                .district(workshop.getDistrict() != null ? workshop.getDistrict() : (workshop.getVenue() != null ? workshop.getVenue().getDistrict() : null))
                                 .createdAt(workshop.getCreatedAt())
                                 .host(hostInfo)
                                 .venue(venueInfo)
