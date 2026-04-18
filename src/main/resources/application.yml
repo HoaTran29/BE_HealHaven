@@ -50,14 +50,13 @@ logging:
     backend.healhaven: DEBUG
     org.springframework.security: DEBUG
 
-# VNPay Configuration (Sandbox)
-vnpay:
-  tmn-code: ${VNPAY_TMN_CODE:V0HLB31O}
-  hash-secret: ${VNPAY_HASH_SECRET:72UB14VN1ILYFFVXS90NPRQMOVCKK4CZ}
-  url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
-  # IPN URL: VNPay gọi server-to-server để xác nhận giao dịch
-  ipn-url: ${VNPAY_IPN_URL:http://localhost:8080/api/payments/vnpay-ipn}
-  # Return URL: trình duyệt redirect về sau khi thanh toán
-  return-url: ${VNPAY_RETURN_URL:http://localhost:5173/payment/result}
-  version: "2.1.0"
-  command: "pay"
+
+# Supabase Storage Configuration
+supabase:
+  url: ${SUPABASE_URL:https://rtahmkkunlwacxdyrnrx.supabase.co}
+  key: ${SUPABASE_SERVICE_KEY:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0YWhta2t1bmx3YWN4ZHlybnJ4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2OTUzMDY2MiwiZXhwIjoyMDg1MTA2NjYyfQ.WYVQK6fznm_--F2uqe_QBU_eGpLwVOmXHOzAf2cPo7w}
+  bucket: ${SUPABASE_BUCKET:workshop-images}
+
+# SePay Payment Webhook Configuration
+sepay:
+  api-key: ${SEPAY_API_KEY:your-sepay-api-key-here}

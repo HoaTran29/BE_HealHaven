@@ -11,12 +11,10 @@ import backend.healhaven.dto.response.VenueResponse;
 import backend.healhaven.dto.response.AdminStatsResponse;
 import backend.healhaven.dto.response.RevenueChartResponse;
 import backend.healhaven.dto.response.WithdrawalResponse;
-import backend.healhaven.dto.response.BookingResponse;
 import backend.healhaven.enums.UserRole;
 import backend.healhaven.enums.WorkshopStatus;
 import backend.healhaven.enums.WithdrawalStatus;
 import backend.healhaven.service.AdminService;
-import backend.healhaven.service.ManualPaymentService;
 import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +32,6 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
-    private final ManualPaymentService manualPaymentService;
 
     @GetMapping("/users")
     @Operation(summary = "Get all users (Paginated & Filtered)")
@@ -164,36 +161,5 @@ public class AdminController {
             @Valid @RequestBody RejectReasonRequest request) {
         WithdrawalResponse response = adminService.rejectWithdrawal(id, request.getReason());
         return ResponseEntity.ok(ApiResponse.success("Withdrawal rejected successfully", response));
-    }
-
-    // --- PAYMENT CONFIRMATION ---
-
-    @GetMapping("/payments/pending")
-    @Operation(summary = "Danh sách booking chờ xác nhận thanh toán",
-            description = "Lấy danh sách các booking user đã xác nhận chuyển khoản nhưng chưa được admin duyệt")
-    public ResponseEntity<ApiResponse<PageResponse<BookingResponse>>> getPendingPayments(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        PageResponse<BookingResponse> response = manualPaymentService.getPendingConfirmationBookings(page, size);
-        return ResponseEntity.ok(ApiResponse.success(response));
-    }
-
-    @PutMapping("/payments/{bookingId}/approve")
-    @Operation(summary = "Duyệt thanh toán",
-            description = "Xác nhận đã nhận được tiền chuyển khoản, đổi booking status thành PAID")
-    public ResponseEntity<ApiResponse<BookingResponse>> approvePayment(
-            @PathVariable Integer bookingId) {
-        BookingResponse response = manualPaymentService.approvePayment(bookingId);
-        return ResponseEntity.ok(ApiResponse.success("Đã xác nhận thanh toán thành công", response));
-    }
-
-    @PutMapping("/payments/{bookingId}/reject")
-    @Operation(summary = "Từ chối xác nhận thanh toán",
-            description = "Từ chối booking (chưa thấy tiền), booking trở về PENDING để user thử lại")
-    public ResponseEntity<ApiResponse<BookingResponse>> rejectPayment(
-            @PathVariable Integer bookingId,
-            @Valid @RequestBody RejectReasonRequest request) {
-        BookingResponse response = manualPaymentService.rejectPayment(bookingId, request.getReason());
-        return ResponseEntity.ok(ApiResponse.success("Đã từ chối xác nhận thanh toán", response));
     }
 }
