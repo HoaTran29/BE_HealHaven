@@ -7,7 +7,7 @@ spring:
     # Using Supavisor Connection Pooling (Transaction Mode port 6543)
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require&prepareThreshold=0}
     username: ${SPRING_DATASOURCE_USERNAME:postgres.rtahmkkunlwacxdyrnrx}
-    password: ${SPRING_DATASOURCE_PASSWORD:geXHyn6YfpOadJPe}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -25,8 +25,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID:1089431720402-svcom6u19il9djr08s81qj1i66oj01et.apps.googleusercontent.com}
-            client-secret: ${GOOGLE_CLIENT_SECRET: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}
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope:
               - email
               - profile
@@ -54,7 +54,7 @@ logging:
 # Supabase Storage Configuration
 supabase:
   url: ${SUPABASE_URL:https://rtahmkkunlwacxdyrnrx.supabase.co}
-  key: ${SUPABASE_SERVICE_KEY:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0YWhta2t1bmx3YWN4ZHlybnJ4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2OTUzMDY2MiwiZXhwIjoyMDg1MTA2NjYyfQ.WYVQK6fznm_--F2uqe_QBU_eGpLwVOmXHOzAf2cPo7w}
+  key: ${SUPABASE_SERVICE_KEY}
   bucket: ${SUPABASE_BUCKET:workshop-images}
 
 # SePay Payment Webhook Configuration
