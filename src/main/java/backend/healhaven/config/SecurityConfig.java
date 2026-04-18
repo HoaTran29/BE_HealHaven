@@ -53,6 +53,7 @@ public class SecurityConfig {
                         // Swagger/OpenAPI
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/").permitAll()
                         .requestMatchers("/uploads/**").permitAll() // Serve uploaded files
+                        .requestMatchers("/webhooks/**").permitAll() // SePay webhook (auth via API key)
                         .requestMatchers("/media/**").authenticated() // Upload API requires login
 
                         // All other requests need authentication
